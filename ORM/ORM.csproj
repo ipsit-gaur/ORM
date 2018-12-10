@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -56,11 +59,12 @@
   <ItemGroup>
     <Compile Include="DataContext.cs" />
     <Compile Include="DbConnection.cs" />
-    <Compile Include="IConnection.cs" />
+    <Compile Include="DependencyResolver.cs" />
     <Compile Include="IDataContext.cs" />
-    <Compile Include="InMemoryConnection.cs" />
+    <Compile Include="IDataSourceManager.cs" />
     <Compile Include="ODataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

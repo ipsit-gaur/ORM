@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Autofac;
+using System.Collections.Generic;
 
 namespace ORM
 {
@@ -9,17 +10,16 @@ namespace ORM
     public sealed class ODataSet<T> where T : class
     {
         private List<T> _data;
-    }
+        private readonly IDataSourceManager _dataSourceManager;
 
-    public static class DataSetExtensions
-    {
-        public static List<T> ToList<T>(this ODataSet<T> data) where T : class
+        public ODataSet()
         {
-            // Call DataProcessor here and map the Response to Entity class
+            _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
+        }
+
+        public List<T> ToList()
+        {
             return new List<T>();
         }
     }
 }
-
-
-// DataSet will have a DataSourceProcessor acc to connection which will generate Query for DS and sending to DB

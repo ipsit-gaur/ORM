@@ -1,18 +1,37 @@
-﻿namespace ORM
+﻿using System;
+using System.Linq;
+using Autofac;
+
+namespace ORM
 {
     public abstract class DataContext : IDataContext
     {
-        private string _connectionStringName;
-        private IConnection _connection;
+        #region Private Variables
+        private readonly IDataSourceManager _dataSourceManager;
 
-        public DataContext(string connectionStringName)
+        private string _connectionString;
+        #endregion
+
+        public DataContext(string connectionString)
         {
-            _connectionStringName = connectionStringName;
+            _connectionString = connectionString;
+            var dependencyResolver = new DependencyResolver();
+            dependencyResolver.Register();
+            _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
+            InitializeDataSets();
         }
 
-        private void ConnectToDB()
+        private void InitializeDataSets()
         {
-            // Connect to DB here
+            foreach (var property in this.GetType().GetProperties()
+                .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(ODataSet<>)))
+            {
+                var listType = typeof(ODataSet<>);
+                var constructedListType = listType.MakeGenericType(property.PropertyType.GetGenericTypeDefinition());
+
+                var instance = Activator.CreateInstance(property.PropertyType);
+                property.SetValue(this, instance);
+            }
         }
     }
 }
