@@ -54,11 +54,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataContext.cs" />
+    <Compile Include="Data\DataContext.cs" />
     <Compile Include="DependencyResolver.cs" />
-    <Compile Include="IDataContext.cs" />
-    <Compile Include="IDataSourceManager.cs" />
-    <Compile Include="ODataSet.cs" />
+    <Compile Include="Data\IDataContext.cs" />
+    <Compile Include="Data\IDataSourceManager.cs" />
+    <Compile Include="Data\ODataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLManager.cs" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using System.Collections.Generic;
 
-namespace ORM
+namespace ORM.Data
 {
     /// <summary>
     /// Represents a Db Set of ORM Model

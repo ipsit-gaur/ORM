@@ -1,4 +1,6 @@
-﻿namespace ORM.Tests
+﻿using ORM.Data;
+
+namespace ORM.Tests
 {
     public class MyContext : DataContext
     {

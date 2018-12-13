@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ORM.Data;
+using System;
 
 namespace ORM
 {
-    public class SQLManager : IDataSourceManager
+    internal class SQLManager : IDataSourceManager
     {
         public void CreateConnection()
         {

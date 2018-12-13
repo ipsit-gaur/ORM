@@ -2,7 +2,7 @@
 using System.Linq;
 using Autofac;
 
-namespace ORM
+namespace ORM.Data
 {
     public abstract class DataContext : IDataContext
     {
