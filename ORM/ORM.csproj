@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTableExtension.cs" />
     <Compile Include="Data\DataContext.cs" />
     <Compile Include="DependencyResolver.cs" />
     <Compile Include="Data\IDataContext.cs" />

@@ -4,7 +4,7 @@ namespace ORM.Tests
 {
     public class MyContext : DataContext
     {
-        public ODataSet<string> People { get; set; }
+        public ODataSet<Categories> Categories { get; set; }
 
         public MyContext() : base("")
         {

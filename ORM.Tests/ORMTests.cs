@@ -15,7 +15,7 @@ namespace ORM.Tests
         public void VerifyDataSetsAreInitialized()
         {
             var myContext = new MyContext();
-            Assert.AreEqual(0, myContext.People.ToList().Count);
+            Assert.AreEqual(8, myContext.Categories.ToList().Count);
         }
     }
 }

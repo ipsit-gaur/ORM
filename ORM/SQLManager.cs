@@ -17,7 +17,7 @@ namespace ORM
         List<T> IDataSourceManager.Read<T>(string query)
         {
             var data = _sqlHelper.ExecuteReader(query);
-            return null;
+            return data.Map<T>();
         }
     }
 }
