@@ -65,5 +65,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ORM.SQL\ORM.SQL.csproj">
+      <Project>{0eb19e01-c626-4362-9d58-0a9054ad8a03}</Project>
+      <Name>ORM.SQL</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

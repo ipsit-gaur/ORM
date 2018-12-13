@@ -11,7 +11,7 @@ namespace ORM
         {
             var containerBuilder = new ContainerBuilder();
 
-            containerBuilder.RegisterType<SQLManager>().As<IDataSourceManager>().SingleInstance();
+            containerBuilder.Register(x => new SQLManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
             Container = containerBuilder.Build();
             Container.BeginLifetimeScope();
         }

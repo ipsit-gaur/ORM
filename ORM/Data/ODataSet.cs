@@ -19,6 +19,7 @@ namespace ORM.Data
 
         public List<T> ToList()
         {
+            _dataSourceManager.Read<T>("SELECT TOP 10 * FROM ERRORS NOLOCK");
             return new List<T>();
         }
     }

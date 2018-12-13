@@ -1,7 +1,9 @@
-﻿namespace ORM.Data
+﻿using System.Collections.Generic;
+
+namespace ORM.Data
 {
     internal interface IDataSourceManager
     {
-        void CreateConnection();
+        List<T> Read<T>(string query) where T : class;
     }
 }

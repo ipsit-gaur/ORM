@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Autofac;
+using System;
 using System.Linq;
-using Autofac;
 
 namespace ORM.Data
 {
     public abstract class DataContext : IDataContext
     {
         #region Private Variables
-        private readonly IDataSourceManager _dataSourceManager;
-
         private string _connectionString;
+
+        private readonly IDataSourceManager _dataSourceManager;
         #endregion
 
         public DataContext(string connectionString)

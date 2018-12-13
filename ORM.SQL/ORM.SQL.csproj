@@ -41,12 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ORM\ORM.csproj">
-      <Project>{564f0c89-4b2b-45ec-8037-05e7a9c1e7db}</Project>
-      <Name>ORM</Name>
-    </ProjectReference>
+    <Compile Include="SQLHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
