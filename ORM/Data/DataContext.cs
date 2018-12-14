@@ -30,7 +30,7 @@ namespace ORM.Data
                 .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(DbTable<>)))
             {
                 var listType = typeof(DbTable<>);
-                var constructedListType = listType.MakeGenericType(property.PropertyType.GetGenericTypeDefinition());
+                var constructedListType = listType.MakeGenericType(listType.GetGenericArguments().FirstOrDefault());
 
                 var instance = Activator.CreateInstance(property.PropertyType);
                 property.SetValue(this, instance);

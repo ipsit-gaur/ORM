@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\TypeCommon.cs" />
     <Compile Include="DataTableExtension.cs" />
     <Compile Include="Data\DataContext.cs" />
     <Compile Include="Data\DbEntity.cs" />
@@ -63,7 +64,10 @@
     <Compile Include="Data\IDataSourceManager.cs" />
     <Compile Include="Data\DbTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\Query.cs" />
+    <Compile Include="Common\QueryProvider.cs" />
     <Compile Include="SQL\SQLManager.cs" />
+    <Compile Include="SQL\SQLQueryProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
