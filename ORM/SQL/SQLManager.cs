@@ -3,7 +3,7 @@ using ORM.SQL;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace ORM
+namespace ORM.SQL
 {
     internal class SQLManager : IDataSourceManager
     {

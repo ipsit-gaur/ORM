@@ -7,12 +7,11 @@ namespace ORM.Data
     /// Represents a Db Set of ORM Model
     /// </summary>
     /// <typeparam name="T">Type of the entity</typeparam>
-    public sealed class ODataSet<T> where T : class
+    public sealed class DbTable<T> where T : DbEntity
     {
-        private List<T> _data;
         private readonly IDataSourceManager _dataSourceManager;
 
-        public ODataSet()
+        public DbTable()
         {
             _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
         }
