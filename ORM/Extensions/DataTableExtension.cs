@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 
-namespace ORM
+namespace ORM.Extensions
 {
     internal static class DataTableExtension
     {
