@@ -15,19 +15,22 @@ namespace ORM.Data
         public DataContext(string connectionString)
         {
             _connectionString = connectionString;
-            var dependencyResolver = new DependencyResolver();
-            dependencyResolver.Register();
+            new DependencyResolver().Register();
+
             _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
             InitializeDataSets();
         }
 
+        /// <summary>
+        /// Initializes all the Datasets to a new instance
+        /// </summary>
         private void InitializeDataSets()
         {
             foreach (var property in this.GetType().GetProperties()
-                .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(ODataSet<>)))
+                .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(DbTable<>)))
             {
-                var listType = typeof(ODataSet<>);
-                var constructedListType = listType.MakeGenericType(property.PropertyType.GetGenericTypeDefinition());
+                var listType = typeof(DbTable<>);
+                var constructedListType = listType.MakeGenericType(listType.GetGenericArguments().FirstOrDefault());
 
                 var instance = Activator.CreateInstance(property.PropertyType);
                 property.SetValue(this, instance);

@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ORM.Extensions;
+using System.Linq;
 
 namespace ORM.Tests
 {
@@ -15,7 +17,7 @@ namespace ORM.Tests
         public void VerifyDataSetsAreInitialized()
         {
             var myContext = new MyContext();
-            Assert.AreEqual(8, myContext.Categories.ToList().Count);
+            Assert.AreEqual(8, myContext.Categories.Filter(x => x.CategoryID == 1).Read().Count);
         }
     }
 }

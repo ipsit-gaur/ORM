@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using ORM.Data;
+using ORM.SQL;
 
 namespace ORM
 {
