@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 
 namespace ORM.SQL
 {
+    // TODO: Should be in ORM.SQL Assembly
     internal class SQLQueryProvider : QueryProvider
     {
         public override object Execute(Expression expression)

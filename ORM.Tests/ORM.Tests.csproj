@@ -49,9 +49,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Categories.cs" />
-    <Compile Include="ORMTests.cs" />
-    <Compile Include="MyContext.cs" />
+    <Compile Include="Errors.cs" />
+    <Compile Include="Data\ContextTests.cs" />
+    <Compile Include="TestContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

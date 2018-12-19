@@ -1,11 +1,11 @@
 ﻿using ORM.Data;
 using ORM.Extensions;
-using ORM.SQL;
 using System.Collections.Generic;
 using System.Configuration;
 
 namespace ORM.SQL
 {
+    // TODO: Should be in ORM.SQL Assembly
     internal class SQLManager : IDataSourceManager
     {
         private readonly SQLHelper _sqlHelper;

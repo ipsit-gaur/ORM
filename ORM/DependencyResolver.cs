@@ -13,6 +13,7 @@ namespace ORM
             var containerBuilder = new ContainerBuilder();
 
             containerBuilder.Register(x => new SQLManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
+            containerBuilder.RegisterType<SQLQueryBuilder>().As<IQueryBuilder>();
             Container = containerBuilder.Build();
             Container.BeginLifetimeScope();
         }
