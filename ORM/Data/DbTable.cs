@@ -1,6 +1,8 @@
 ﻿using Autofac;
+using ORM.SQL;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace ORM.Data
 {
@@ -13,6 +15,8 @@ namespace ORM.Data
         private readonly IDataSourceManager _dataSourceManager;
         private readonly IQueryBuilder _queryBuilder;
 
+        private Expression<Func<T, bool>> _predicate;
+
         public DbTable()
         {
             _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
@@ -21,18 +25,14 @@ namespace ORM.Data
 
         public List<T> Read()
         {
-            return _dataSourceManager.Read<T>(PrepareQuery());
+            var query = _queryBuilder.GetQuery(_predicate);
+            return _dataSourceManager.Read<T>(query);
         }
 
-        public DbTable<T> Filter(Func<T, bool> predicate)
+        public DbTable<T> Filter(Expression<Func<T, bool>> predicate)
         {
-            // TODO: Apply filter logic here
-            return null;
-        }
-
-        private string PrepareQuery()
-        {
-            return $"SELECT TOP 10 * FROM {typeof(T).Name}";
+            _predicate = predicate;
+            return this;
         }
     }
 }

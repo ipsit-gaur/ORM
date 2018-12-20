@@ -315,5 +315,24 @@ namespace ORM.SQL
 
             return false;
         }
+
+        public string GetQuery<T>(Expression<Func<T, bool>> predicate) where T : DbEntity
+        {
+            var sb = new StringBuilder();
+            sb.Append("SELECT * FROM ");
+            sb.Append(typeof(T).Name);
+
+            if (predicate != null)
+            {
+                var whereClause = Translate(predicate);
+                if (!string.IsNullOrEmpty(whereClause))
+                {
+                    sb.Append(" WHERE ");
+                    sb.Append(whereClause);
+                }
+            }
+
+            return sb.ToString();
+        }
     }
 }
