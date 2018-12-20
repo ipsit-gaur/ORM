@@ -1,8 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ORM.SQL;
-using System;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace ORM.Tests.Data
 {

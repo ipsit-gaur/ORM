@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace ORM.Data
 {
+    /// <summary>
+    /// DataContext class holding all Datatable sets
+    /// </summary>
     public abstract class DataContext : IDataContext
     {
         #region Private Variables
