@@ -1,5 +1,6 @@
 ﻿using ORM.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -10,42 +11,10 @@ namespace ORM.SQL
     public class SQLQueryBuilder : ExpressionVisitor, IQueryBuilder
     {
         private StringBuilder sb;
-        private string _orderBy = string.Empty;
-        private int? _skip = null;
-        private int? _take = null;
-        private string _whereClause = string.Empty;
-
-        public int? Skip
-        {
-            get
-            {
-                return _skip;
-            }
-        }
-
-        public int? Take
-        {
-            get
-            {
-                return _take;
-            }
-        }
-
-        public string OrderBy
-        {
-            get
-            {
-                return _orderBy;
-            }
-        }
-
-        public string WhereClause
-        {
-            get
-            {
-                return _whereClause;
-            }
-        }
+        public int? Skip { get; private set; }
+        public int? Take { get; private set; }
+        public string OrderBy { get; private set; } = string.Empty;
+        public string WhereClause { get; private set; }
 
         public SQLQueryBuilder()
         {
@@ -55,8 +24,8 @@ namespace ORM.SQL
         {
             this.sb = new StringBuilder();
             this.Visit(expression);
-            _whereClause = this.sb.ToString();
-            return _whereClause;
+            WhereClause = this.sb.ToString();
+            return WhereClause;
         }
 
         private static Expression StripQuotes(Expression e)
@@ -254,6 +223,11 @@ namespace ORM.SQL
                 sb.Append(m.Member.Name);
                 return m;
             }
+            else if (m.Expression != null && m.Expression.NodeType == ExpressionType.Constant)
+            {
+                this.VisitConstant((m.Expression as ConstantExpression));
+                return m;
+            }
 
             throw new NotSupportedException(string.Format("The member '{0}' is not supported", m.Member.Name));
         }
@@ -273,13 +247,13 @@ namespace ORM.SQL
             MemberExpression body = lambdaExpression.Body as MemberExpression;
             if (body != null)
             {
-                if (string.IsNullOrEmpty(_orderBy))
+                if (string.IsNullOrEmpty(OrderBy))
                 {
-                    _orderBy = string.Format("{0} {1}", body.Member.Name, order);
+                    OrderBy = string.Format("{0} {1}", body.Member.Name, order);
                 }
                 else
                 {
-                    _orderBy = string.Format("{0}, {1} {2}", _orderBy, body.Member.Name, order);
+                    OrderBy = string.Format("{0}, {1} {2}", OrderBy, body.Member.Name, order);
                 }
 
                 return true;
@@ -295,7 +269,7 @@ namespace ORM.SQL
             int size;
             if (int.TryParse(sizeExpression.Value.ToString(), out size))
             {
-                _take = size;
+                Take = size;
                 return true;
             }
 
@@ -309,29 +283,38 @@ namespace ORM.SQL
             int size;
             if (int.TryParse(sizeExpression.Value.ToString(), out size))
             {
-                _skip = size;
+                Skip = size;
                 return true;
             }
 
             return false;
         }
 
-        public string GetQuery<T>(Expression<Func<T, bool>> predicate) where T : DbEntity
+        private string GetQuery<T>(Expression<Func<T, bool>> predicate) where T : DbEntity
+        {
+            if (predicate == null)
+                throw new ArgumentException("Predicate cannot be null");
+            return Translate(predicate);
+        }
+
+        public string GetQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
         {
             var sb = new StringBuilder();
             sb.Append("SELECT * FROM ");
             sb.Append(typeof(T).Name);
-
-            if (predicate != null)
+            var isWhereAdded = false;
+            foreach (var predicate in predicates)
             {
-                var whereClause = Translate(predicate);
-                if (!string.IsNullOrEmpty(whereClause))
+                var whereClause = GetQuery<T>(predicate);
+                if (!isWhereAdded)
                 {
                     sb.Append(" WHERE ");
-                    sb.Append(whereClause);
+                    isWhereAdded = true;
                 }
+                else
+                    sb.Append(" AND ");
+                sb.Append(whereClause);
             }
-
             return sb.ToString();
         }
     }

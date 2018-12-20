@@ -8,7 +8,6 @@ namespace ORM.SQL.Tests
         [TestMethod()]
         public void SQLHelperTest()
         {
-            Assert.Fail();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ORM.Data
         private readonly IDataSourceManager _dataSourceManager;
         private readonly IQueryBuilder _queryBuilder;
 
-        private Expression<Func<T, bool>> _predicate;
+        private List<Expression<Func<T, bool>>> _predicates;
         #endregion
 
         public DbTable()
@@ -30,7 +30,7 @@ namespace ORM.Data
         /// <returns>List of Entities</returns>
         public List<T> Read()
         {
-            var query = _queryBuilder.GetQuery(_predicate);
+            var query = _queryBuilder.GetQuery(_predicates);
             return _dataSourceManager.Read<T>(query);
         }
 
@@ -41,7 +41,8 @@ namespace ORM.Data
         /// <returns>DbTable applied with the filter</returns>
         public DbTable<T> Filter(Expression<Func<T, bool>> predicate)
         {
-            _predicate = predicate;
+            _predicates = _predicates ?? new List<Expression<Func<T, bool>>>();
+            _predicates.Add(predicate);
             return this;
         }
     }
