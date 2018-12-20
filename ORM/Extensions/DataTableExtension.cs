@@ -40,7 +40,16 @@ namespace ORM.Extensions
             {
                 if (columns[property.Name] != null)
                 {
-                    property.SetValue(obj, dataRow[property.Name]);
+                    var value = dataRow[property.Name];
+                    Type t = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                    if (value.GetType() == typeof(DBNull))
+                        property.SetValue(obj, null);
+                    else
+                    {
+                        object safeValue = (value == null) ? null : Convert.ChangeType(value, t);
+                        property.SetValue(obj, safeValue, null);
+                    }
                 }
             }
             return obj;
@@ -60,9 +69,127 @@ namespace ORM.Extensions
                 if (matchingColumn == null)
                     continue;
 
-                if (property.PropertyType != matchingColumn.DataType)
-                    throw new InvalidOperationException($"Cannot cast {matchingColumn.DataType} to {property.DeclaringType} of class {dataTable.TableName}");
+                if ((property.PropertyType != matchingColumn.DataType) &&
+                    !HasImplicitConversion(matchingColumn.DataType, property.PropertyType) &&
+                    !IsNullableTypeofType(matchingColumn.DataType, property.PropertyType))
+                    throw new InvalidOperationException($"Cannot cast {matchingColumn.DataType} to {property.PropertyType} of class {typeof(T).Name}");
             }
+        }
+
+        private static bool IsNullableTypeofType(Type source, Type destination)
+        {
+            if (destination.GetGenericArguments()[0] == source ||
+                HasImplicitConversion(source, destination.GetGenericArguments()[0]))
+                return true;
+            return false;
+        }
+
+        private static bool HasImplicitConversion(Type source, Type destination)
+        {
+            var sourceCode = Type.GetTypeCode(source);
+            var destinationCode = Type.GetTypeCode(destination);
+            switch (sourceCode)
+            {
+                case TypeCode.SByte:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Int16:
+                        case TypeCode.Int32:
+                        case TypeCode.Int64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Byte:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Int16:
+                        case TypeCode.UInt16:
+                        case TypeCode.Int32:
+                        case TypeCode.UInt32:
+                        case TypeCode.Int64:
+                        case TypeCode.UInt64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Int16:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Int32:
+                        case TypeCode.Int64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.UInt16:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Int32:
+                        case TypeCode.UInt32:
+                        case TypeCode.Int64:
+                        case TypeCode.UInt64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Int32:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Int64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.UInt32:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.UInt32:
+                        case TypeCode.UInt64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Char:
+                    switch (destinationCode)
+                    {
+                        case TypeCode.UInt16:
+                        case TypeCode.Int32:
+                        case TypeCode.UInt32:
+                        case TypeCode.Int64:
+                        case TypeCode.UInt64:
+                        case TypeCode.Single:
+                        case TypeCode.Double:
+                        case TypeCode.Decimal:
+                            return true;
+                    }
+                    return false;
+                case TypeCode.Single:
+                    return (destinationCode == TypeCode.Double);
+            }
+            return false;
         }
     }
 }
