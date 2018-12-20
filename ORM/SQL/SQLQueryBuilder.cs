@@ -8,13 +8,13 @@ using System.Text;
 namespace ORM.SQL
 {
     // TODO: Should be in ORM.SQL Assembly
-    public class SQLQueryBuilder : ExpressionVisitor, IQueryBuilder
+    internal class SQLQueryBuilder : ExpressionVisitor, IQueryBuilder
     {
-        private StringBuilder sb;
-        public int? Skip { get; private set; }
-        public int? Take { get; private set; }
-        public string OrderBy { get; private set; } = string.Empty;
-        public string WhereClause { get; private set; }
+        private StringBuilder _queryBuilder;
+        internal int? Skip { get; private set; }
+        internal int? Take { get; private set; }
+        internal string OrderBy { get; private set; } = string.Empty;
+        internal string WhereClause { get; private set; }
 
         public SQLQueryBuilder()
         {
@@ -22,9 +22,9 @@ namespace ORM.SQL
 
         public string Translate(Expression expression)
         {
-            this.sb = new StringBuilder();
+            this._queryBuilder = new StringBuilder();
             this.Visit(expression);
-            WhereClause = this.sb.ToString();
+            WhereClause = this._queryBuilder.ToString();
             return WhereClause;
         }
 
@@ -87,7 +87,7 @@ namespace ORM.SQL
             switch (u.NodeType)
             {
                 case ExpressionType.Not:
-                    sb.Append(" NOT ");
+                    _queryBuilder.Append(" NOT ");
                     this.Visit(u.Operand);
                     break;
                 case ExpressionType.Convert:
@@ -99,7 +99,6 @@ namespace ORM.SQL
             return u;
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -107,63 +106,63 @@ namespace ORM.SQL
         /// <returns></returns>
         protected override Expression VisitBinary(BinaryExpression b)
         {
-            sb.Append("(");
+            _queryBuilder.Append("(");
             this.Visit(b.Left);
 
             switch (b.NodeType)
             {
                 case ExpressionType.And:
-                    sb.Append(" AND ");
+                    _queryBuilder.Append(" AND ");
                     break;
 
                 case ExpressionType.AndAlso:
-                    sb.Append(" AND ");
+                    _queryBuilder.Append(" AND ");
                     break;
 
                 case ExpressionType.Or:
-                    sb.Append(" OR ");
+                    _queryBuilder.Append(" OR ");
                     break;
 
                 case ExpressionType.OrElse:
-                    sb.Append(" OR ");
+                    _queryBuilder.Append(" OR ");
                     break;
 
                 case ExpressionType.Equal:
                     if (IsNullConstant(b.Right))
                     {
-                        sb.Append(" IS ");
+                        _queryBuilder.Append(" IS ");
                     }
                     else
                     {
-                        sb.Append(" = ");
+                        _queryBuilder.Append(" = ");
                     }
                     break;
 
                 case ExpressionType.NotEqual:
                     if (IsNullConstant(b.Right))
                     {
-                        sb.Append(" IS NOT ");
+                        _queryBuilder.Append(" IS NOT ");
                     }
                     else
                     {
-                        sb.Append(" <> ");
+                        _queryBuilder.Append(" <> ");
                     }
                     break;
 
                 case ExpressionType.LessThan:
-                    sb.Append(" < ");
+                    _queryBuilder.Append(" < ");
                     break;
 
                 case ExpressionType.LessThanOrEqual:
-                    sb.Append(" <= ");
+                    _queryBuilder.Append(" <= ");
                     break;
 
                 case ExpressionType.GreaterThan:
-                    sb.Append(" > ");
+                    _queryBuilder.Append(" > ");
                     break;
 
                 case ExpressionType.GreaterThanOrEqual:
-                    sb.Append(" >= ");
+                    _queryBuilder.Append(" >= ");
                     break;
 
                 default:
@@ -172,7 +171,7 @@ namespace ORM.SQL
             }
 
             this.Visit(b.Right);
-            sb.Append(")");
+            _queryBuilder.Append(")");
             return b;
         }
 
@@ -182,33 +181,33 @@ namespace ORM.SQL
 
             if (q == null && c.Value == null)
             {
-                sb.Append("NULL");
+                _queryBuilder.Append("NULL");
             }
             else if (q == null)
             {
                 switch (Type.GetTypeCode(c.Value.GetType()))
                 {
                     case TypeCode.Boolean:
-                        sb.Append(((bool)c.Value) ? 1 : 0);
+                        _queryBuilder.Append(((bool)c.Value) ? 1 : 0);
                         break;
 
                     case TypeCode.String:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
+                        _queryBuilder.Append("'");
+                        _queryBuilder.Append(c.Value);
+                        _queryBuilder.Append("'");
                         break;
 
                     case TypeCode.DateTime:
-                        sb.Append("'");
-                        sb.Append(c.Value);
-                        sb.Append("'");
+                        _queryBuilder.Append("'");
+                        _queryBuilder.Append(c.Value);
+                        _queryBuilder.Append("'");
                         break;
 
                     case TypeCode.Object:
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
 
                     default:
-                        sb.Append(c.Value);
+                        _queryBuilder.Append(c.Value);
                         break;
                 }
             }
@@ -220,7 +219,7 @@ namespace ORM.SQL
         {
             if (m.Expression != null && m.Expression.NodeType == ExpressionType.Parameter)
             {
-                sb.Append(m.Member.Name);
+                _queryBuilder.Append(m.Member.Name);
                 return m;
             }
             else if (m.Expression != null && m.Expression.NodeType == ExpressionType.Constant)

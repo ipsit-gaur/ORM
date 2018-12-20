@@ -1,10 +1,7 @@
-﻿using ORM.Data;
-using System;
-
-namespace ORM.Extensions
+﻿namespace ORM.Extensions
 {
-    public static class DbTableExtensions
+    internal static class DbTableExtensions
     {
-        
+
     }
 }

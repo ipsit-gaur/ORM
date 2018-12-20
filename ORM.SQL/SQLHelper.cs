@@ -15,8 +15,7 @@ namespace ORM.SQL
 
         public DataTable ExecuteReader(string query)
         {
-            using (SqlConnection connection =
-            new SqlConnection(_connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(query, connection);
@@ -35,7 +34,7 @@ namespace ORM.SQL
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message); // TODO: Implement Logger
+                    Console.WriteLine(ex.Message); // TODO: Implement Logger and do not return null from here instead raise exception
                     return null;
                 }
                 finally

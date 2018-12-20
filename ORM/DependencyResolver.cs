@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using ORM.Data;
+using ORM.Logger;
 using ORM.SQL;
 
 namespace ORM
@@ -14,6 +15,7 @@ namespace ORM
 
             containerBuilder.Register(x => new SQLManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
             containerBuilder.RegisterType<SQLQueryBuilder>().As<IQueryBuilder>();
+            containerBuilder.RegisterType<LogManager>().As<LogManager>();
             Container = containerBuilder.Build();
             Container.BeginLifetimeScope();
         }

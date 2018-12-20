@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ORM.Logger;
 using System;
 using System.Linq;
 
@@ -13,6 +14,7 @@ namespace ORM.Data
         private string _connectionString;
 
         private readonly IDataSourceManager _dataSourceManager;
+        private readonly LogManager _logManager;
         #endregion
 
         public DataContext(string connectionString)
@@ -21,6 +23,7 @@ namespace ORM.Data
             new DependencyResolver().Register();
 
             _dataSourceManager = DependencyResolver.Container.Resolve<IDataSourceManager>();
+            _logManager = DependencyResolver.Container.Resolve<LogManager>();
             InitializeDataSets();
         }
 
@@ -29,6 +32,7 @@ namespace ORM.Data
         /// </summary>
         private void InitializeDataSets()
         {
+            _logManager.Info("Datasets initialized");
             foreach (var property in this.GetType().GetProperties()
                 .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericTypeDefinition() == typeof(DbTable<>)))
             {

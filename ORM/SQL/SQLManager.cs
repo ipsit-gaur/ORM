@@ -12,6 +12,7 @@ namespace ORM.SQL
 
         public SQLManager(string configName)
         {
+            // TODO: Resolve using DI
             _sqlHelper = new SQLHelper(ConfigurationManager.AppSettings[configName]);
         }
 
