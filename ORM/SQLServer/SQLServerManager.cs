@@ -3,14 +3,14 @@ using ORM.Extensions;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace ORM.SQL
+namespace ORM.SQLServer
 {
-    // TODO: Should be in ORM.SQL Assembly
-    internal class SQLManager : IDataSourceManager
+    // TODO: Should be in ORM.SQLServer Assembly
+    internal class SQLServerManager : IDataSourceManager
     {
         private readonly SQLHelper _sqlHelper;
 
-        public SQLManager(string configName)
+        public SQLServerManager(string configName)
         {
             // TODO: Resolve using DI
             _sqlHelper = new SQLHelper(ConfigurationManager.AppSettings[configName]);

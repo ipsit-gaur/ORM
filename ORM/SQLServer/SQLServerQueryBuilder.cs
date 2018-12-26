@@ -5,10 +5,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace ORM.SQL
+namespace ORM.SQLServer
 {
-    // TODO: Should be in ORM.SQL Assembly
-    internal class SQLQueryBuilder : ExpressionVisitor, IQueryBuilder
+    // TODO: Should be in ORM.SQLServer Assembly
+    internal class SQLServerQueryBuilder : ExpressionVisitor, IQueryBuilder
     {
         private StringBuilder _queryBuilder;
         internal int? Skip { get; private set; }
@@ -16,7 +16,7 @@ namespace ORM.SQL
         internal string OrderBy { get; private set; } = string.Empty;
         internal string WhereClause { get; private set; }
 
-        public SQLQueryBuilder()
+        public SQLServerQueryBuilder()
         {
         }
 
@@ -204,6 +204,7 @@ namespace ORM.SQL
                         break;
 
                     case TypeCode.Object:
+                        var property = c.Value.GetType().GetProperty("testID");
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
 
                     default:
@@ -241,7 +242,7 @@ namespace ORM.SQL
             UnaryExpression unary = (UnaryExpression)expression.Arguments[1];
             LambdaExpression lambdaExpression = (LambdaExpression)unary.Operand;
 
-            lambdaExpression = (LambdaExpression)Evaluator.PartialEval(lambdaExpression);
+            lambdaExpression = (LambdaExpression)SQLServerEvaluator.PartialEval(lambdaExpression);
 
             MemberExpression body = lambdaExpression.Body as MemberExpression;
             if (body != null)
@@ -299,20 +300,28 @@ namespace ORM.SQL
         public string GetQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
         {
             var sb = new StringBuilder();
-            sb.Append("SELECT * FROM ");
+            sb.Append(SQLServerKeywords.SELECT);
+            sb.Append(SQLServerKeywords.ALL);
+            sb.Append(SQLServerKeywords.FROM);
             sb.Append(typeof(T).Name);
+            sb.Append(" ");
+
+            if (predicates == null)
+                return sb.ToString();
+
             var isWhereAdded = false;
             foreach (var predicate in predicates)
             {
                 var whereClause = GetQuery<T>(predicate);
                 if (!isWhereAdded)
                 {
-                    sb.Append(" WHERE ");
+                    sb.Append(SQLServerKeywords.WHERE);
                     isWhereAdded = true;
                 }
                 else
-                    sb.Append(" AND ");
+                    sb.Append(SQLServerKeywords.AND);
                 sb.Append(whereClause);
+                sb.Append(" ");
             }
             return sb.ToString();
         }

@@ -51,6 +51,7 @@
     <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Categories.cs" />
     <Compile Include="Data\DbTableTests.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="Data\ContextTests.cs" />

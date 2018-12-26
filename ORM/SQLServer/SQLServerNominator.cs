@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace ORM.SQL
+namespace ORM.SQLServer
 {
     /// <summary>
     /// Performs bottom-up analysis to determine which nodes can possibly
     /// be part of an evaluated sub-tree.
     /// </summary>
-    internal class SQLNominator : ExpressionVisitor
+    internal class SQLServerNominator : ExpressionVisitor
     {
         Func<Expression, bool> fnCanBeEvaluated;
         HashSet<Expression> candidates;
         bool cannotBeEvaluated;
 
-        internal SQLNominator(Func<Expression, bool> fnCanBeEvaluated)
+        internal SQLServerNominator(Func<Expression, bool> fnCanBeEvaluated)
         {
             this.fnCanBeEvaluated = fnCanBeEvaluated;
         }

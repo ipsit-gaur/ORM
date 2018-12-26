@@ -7,6 +7,7 @@ namespace ORM.Tests.Data
     public class DbTableTests
     {
         private TestContext _testContext;
+        private int TestID = 1;
 
         [TestInitialize]
         public void TestInit()
@@ -15,21 +16,37 @@ namespace ORM.Tests.Data
         }
 
         [TestMethod]
+        public void DbTableLoadAllTest()
+        {
+            var categories = _testContext.Categories.Read();
+            Assert.AreEqual(8, categories.Count);
+        }
+
+        [TestMethod]
         public void DbTableFilterTest()
         {
-            var testID = 100000;
-            var error = _testContext.Errors.Filter(x => x.ErrorID == 100000).Read();
-            Assert.AreEqual(1, error.Count);
-            Assert.AreEqual(error.FirstOrDefault().ErrorID, testID);
+            int testID = 1;
+            var category = _testContext.Categories.Filter(x => x.CategoryID == TestID).Read();
+            Assert.AreEqual(1, category.Count);
+            Assert.AreEqual(category.FirstOrDefault().CategoryID, testID);
         }
 
         [TestMethod]
         public void DbTableMultilpleFilterTest()
         {
-            var error = _testContext.Errors
-                .Filter(x => x.ErrorID == 100000)
-                .Filter(y => y.Description != "abc").Read();
-            Assert.AreEqual(1, error.Count);
+            var category = _testContext.Categories
+                .Filter(x => x.CategoryID == 1)
+                .Filter(y => y.CategoryName != "abc").Read();
+            Assert.AreEqual(1, category.Count);
+        }
+
+        [TestMethod]
+        public void DbTableMultilpleFilterTest2()
+        {
+            var category = _testContext.Categories
+                .Filter(x => x.CategoryID == 1)
+                .Filter(y => y.CategoryName != "Beverages").Read();
+            Assert.AreEqual(0, category.Count);
         }
     }
 }

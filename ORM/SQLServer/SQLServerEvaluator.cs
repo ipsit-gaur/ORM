@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace ORM.SQL
+namespace ORM.SQLServer
 {
-    internal static class Evaluator
+    internal static class SQLServerEvaluator
     {
         /// <summary>
         /// Performs evaluation & replacement of independent sub-trees
@@ -14,7 +14,7 @@ namespace ORM.SQL
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         internal static Expression PartialEval(Expression expression, Func<Expression, bool> fnCanBeEvaluated)
         {
-            return new SubtreeEvaluator(new SQLNominator(fnCanBeEvaluated).Nominate(expression)).Eval(expression);
+            return new SubtreeEvaluator(new SQLServerNominator(fnCanBeEvaluated).Nominate(expression)).Eval(expression);
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace ORM.SQL
         /// <returns>A new tree with sub-trees evaluated and replaced.</returns>
         internal static Expression PartialEval(Expression expression)
         {
-            return PartialEval(expression, Evaluator.CanBeEvaluatedLocally);
+            return PartialEval(expression, SQLServerEvaluator.CanBeEvaluatedLocally);
         }
 
         private static bool CanBeEvaluatedLocally(Expression expression)

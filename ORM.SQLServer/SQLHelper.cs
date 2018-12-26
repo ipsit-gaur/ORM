@@ -2,7 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
-namespace ORM.SQL
+namespace ORM.SQLServer
 {
     public class SQLHelper
     {

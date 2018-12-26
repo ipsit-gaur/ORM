@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using ORM.Data;
 using ORM.Logger;
-using ORM.SQL;
+using ORM.SQLServer;
 
 namespace ORM
 {
@@ -13,8 +13,8 @@ namespace ORM
         {
             var containerBuilder = new ContainerBuilder();
 
-            containerBuilder.Register(x => new SQLManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
-            containerBuilder.RegisterType<SQLQueryBuilder>().As<IQueryBuilder>();
+            containerBuilder.Register(x => new SQLServerManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
+            containerBuilder.RegisterType<SQLServerQueryBuilder>().As<IQueryBuilder>();
             containerBuilder.RegisterType<LogManager>().As<LogManager>();
             Container = containerBuilder.Build();
             Container.BeginLifetimeScope();
