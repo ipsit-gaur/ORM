@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.SQLServer", "ORM.SQLSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.SQLServer.Tests", "ORM.SQLServer.Tests\ORM.SQLServer.Tests.csproj", "{F6AF1813-FD14-426B-972A-BE3C01F63BDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.Base", "ORM.Base\ORM.Base.csproj", "{D83A338E-92D8-425A-BBD0-8685A2B7F577}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F6AF1813-FD14-426B-972A-BE3C01F63BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6AF1813-FD14-426B-972A-BE3C01F63BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6AF1813-FD14-426B-972A-BE3C01F63BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D83A338E-92D8-425A-BBD0-8685A2B7F577}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D83A338E-92D8-425A-BBD0-8685A2B7F577}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D83A338E-92D8-425A-BBD0-8685A2B7F577}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D83A338E-92D8-425A-BBD0-8685A2B7F577}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

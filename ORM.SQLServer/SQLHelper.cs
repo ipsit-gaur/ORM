@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ORM.Base.Exception;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -32,10 +33,10 @@ namespace ORM.SQLServer
                     dataTable.Load(reader);
                     return dataTable;
                 }
-                catch (Exception ex)
+                catch (SqlException ex)
                 {
-                    Console.WriteLine(ex.Message); // TODO: Implement Logger and do not return null from here instead raise exception
-                    return null;
+                    // TODO: Log here using logger
+                    throw new DbException(ex.Message);
                 }
                 finally
                 {
