@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ORM.SQLServer;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -15,7 +16,7 @@ namespace ORM.Data
         private readonly IDataSourceManager _dataSourceManager;
         private readonly IQueryBuilder _queryBuilder;
 
-        private List<Expression<Func<T, bool>>> _predicates;
+        private List<Expression<Func<T, bool>>> _binaryPredicates;
         #endregion
 
         public DbTable()
@@ -30,7 +31,7 @@ namespace ORM.Data
         /// <returns>List of Entities</returns>
         public List<T> Read()
         {
-            var query = _queryBuilder.GetQuery(_predicates);
+            var query = _queryBuilder.GetQuery(_binaryPredicates);
             return _dataSourceManager.Read<T>(query);
         }
 
@@ -41,9 +42,15 @@ namespace ORM.Data
         /// <returns>DbTable applied with the filter</returns>
         public DbTable<T> Filter(Expression<Func<T, bool>> predicate)
         {
-            _predicates = _predicates ?? new List<Expression<Func<T, bool>>>();
-            _predicates.Add(predicate);
+            _binaryPredicates = _binaryPredicates ?? new List<Expression<Func<T, bool>>>();
+            _binaryPredicates.Add(predicate);
             return this;
+        }
+
+        public int Maximum(Expression<Func<T, int>> predicate)
+        {
+            var query = _queryBuilder.GetQuery(_binaryPredicates, predicate, SQLServerKeywords.MAX);
+            return 0;
         }
     }
 }

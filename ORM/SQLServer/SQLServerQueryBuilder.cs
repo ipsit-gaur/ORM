@@ -21,12 +21,20 @@ namespace ORM.SQLServer
         {
         }
 
-        public string Translate(Expression expression)
+        public string Translate(Expression expression, string operation)
         {
-            this._queryBuilder = new StringBuilder();
-            this.Visit(expression);
-            WhereClause = this._queryBuilder.ToString();
-            return WhereClause;
+            _queryBuilder = new StringBuilder();
+            switch (operation)
+            {
+                case SQLServerKeywords.WHERE:
+                    this.Visit(expression);
+                    WhereClause = _queryBuilder.ToString();
+                    return WhereClause;
+                case SQLServerKeywords.MAX:
+                    throw new NotSupportedException("MAX is not supported");
+                default:
+                    return _queryBuilder.ToString();
+            }
         }
 
         private static Expression StripQuotes(Expression e)
@@ -306,7 +314,15 @@ namespace ORM.SQLServer
         {
             if (predicate == null)
                 throw new ArgumentException("Predicate cannot be null");
-            return Translate(predicate);
+            return Translate(predicate, SQLServerKeywords.WHERE);
+        }
+
+        // TODO: This should be made generic
+        private string GetQuery<T>(Expression<Func<T, int>> predicate, string operation) where T : DbEntity
+        {
+            if (predicate == null)
+                throw new ArgumentException("Predicate cannot be null");
+            return Translate(predicate, operation);
         }
 
         public string GetQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
@@ -336,6 +352,12 @@ namespace ORM.SQLServer
                 sb.Append(" ");
             }
             return sb.ToString();
+        }
+
+        public string GetQuery<T>(List<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
+        {
+            var clause = GetQuery<T>(predicate, operation);
+            return null;
         }
     }
 }
