@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace ORM.SQLServer
@@ -204,9 +205,7 @@ namespace ORM.SQLServer
                         break;
 
                     case TypeCode.Object:
-                        var property = c.Value.GetType().GetProperty("testID");
                         throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", c.Value));
-
                     default:
                         _queryBuilder.Append(c.Value);
                         break;
@@ -223,11 +222,24 @@ namespace ORM.SQLServer
                 _queryBuilder.Append(m.Member.Name);
                 return m;
             }
-            else if (m.Expression != null && m.Expression.NodeType == ExpressionType.Constant)
+            else if (m.Expression is ConstantExpression)
             {
-                this.VisitConstant((m.Expression as ConstantExpression));
-                return m;
+                object container = ((ConstantExpression)m.Expression).Value;
+                var member = m.Member;
+                if (member is FieldInfo)
+                {
+                    object value = ((FieldInfo)member).GetValue(container);
+                    this.VisitConstant(Expression.Constant(value));
+                    return Expression.Constant(value);
+                }
+                if (member is PropertyInfo)
+                {
+                    object value = ((PropertyInfo)member).GetValue(container, null);
+                    this.VisitConstant(Expression.Constant(value));
+                    return Expression.Constant(value);
+                }
             }
+
 
             throw new NotSupportedException(string.Format("The member '{0}' is not supported", m.Member.Name));
         }
