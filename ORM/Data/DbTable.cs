@@ -16,6 +16,7 @@ namespace ORM.Data
         private readonly IDataSourceManager _dataSourceManager;
         private readonly IQueryBuilder _queryBuilder;
 
+        private List<T> _data;
         private List<Expression<Func<T, bool>>> _binaryPredicates;
         #endregion
 
@@ -32,7 +33,8 @@ namespace ORM.Data
         public List<T> Read()
         {
             var query = _queryBuilder.GetQuery(_binaryPredicates);
-            return _dataSourceManager.Read<T>(query);
+            _data = _dataSourceManager.Read<T>(query);
+            return _data;
         }
 
         /// <summary>
