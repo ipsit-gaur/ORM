@@ -40,10 +40,6 @@
     <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="PropertyChanged, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.6.0\lib\net452\PropertyChanged.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -84,6 +80,10 @@
     <ProjectReference Include="..\ORM.Base\ORM.Base.csproj">
       <Project>{d83a338e-92d8-425a-bbd0-8685a2b7f577}</Project>
       <Name>ORM.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ORM.Configuration\ORM.Configuration.csproj">
+      <Project>{0348C8D3-70C8-46D7-A182-FEDBEDC47E4F}</Project>
+      <Name>ORM.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\ORM.Logger\ORM.Logger.csproj">
       <Project>{8c29f60c-e10b-4df5-9375-7048d35e0860}</Project>

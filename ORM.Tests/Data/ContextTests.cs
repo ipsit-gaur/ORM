@@ -5,12 +5,12 @@ namespace ORM.Tests.Data
     [TestClass]
     public class ContextTests
     {
-        private TestContext _testContext;
+        private TestDbContext _testContext;
 
         [TestInitialize]
         public void TestInit()
         {
-            _testContext = new TestContext();
+            _testContext = new TestDbContext();
         }
 
         [TestMethod]

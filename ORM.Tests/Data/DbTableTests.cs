@@ -6,13 +6,13 @@ namespace ORM.Tests.Data
     [TestClass]
     public class DbTableTests
     {
-        private TestContext _testContext;
+        private TestDbContext _testContext;
         private int TestID = 1;
 
         [TestInitialize]
         public void TestInit()
         {
-            _testContext = new TestContext();
+            _testContext = new TestDbContext();
         }
 
         [TestMethod]
