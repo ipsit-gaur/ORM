@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace ORM.PerformanceTests
 {
@@ -8,9 +10,15 @@ namespace ORM.PerformanceTests
 
         private static ActionExecutor _actionExecutor = new ActionExecutor();
 
-        public void ExecuteFunction(Action action, string name)
+        public static void ExecuteFunction(Action action, string name)
         {
             var time = _actionExecutor.Time(action);
+
+            File.WriteAllText(@"D:\Logs.json", JsonConvert.SerializeObject(new TestResult
+            {
+                Name = name,
+                Ticks = time.TotalMilliseconds
+            }));
         }
     }
 }
