@@ -325,7 +325,7 @@ namespace ORM.SQLServer
             return Translate(predicate, operation);
         }
 
-        public string GetQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
+        public string PrepareQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
         {
             var sb = new StringBuilder();
             sb.Append(SQLServerKeywords.SELECT);
@@ -354,7 +354,7 @@ namespace ORM.SQLServer
             return sb.ToString();
         }
 
-        public string GetQuery<T>(List<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
+        public string PrepareQuery<T>(List<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
         {
             var clause = GetQuery<T>(predicate, operation);
             return null;

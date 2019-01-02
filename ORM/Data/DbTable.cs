@@ -32,7 +32,7 @@ namespace ORM.Data
         /// <returns>List of Entities</returns>
         public List<T> Read()
         {
-            var query = _queryBuilder.GetQuery(_binaryPredicates);
+            var query = _queryBuilder.PrepareQuery(_binaryPredicates);
             _data = _dataSourceManager.Read<T>(query);
             return _data;
         }
@@ -51,7 +51,7 @@ namespace ORM.Data
 
         public int Maximum(Expression<Func<T, int>> predicate)
         {
-            var query = _queryBuilder.GetQuery(_binaryPredicates, predicate, SQLServerKeywords.MAX);
+            var query = _queryBuilder.PrepareQuery(_binaryPredicates, predicate, SQLServerKeywords.MAX);
             return 0;
         }
     }
