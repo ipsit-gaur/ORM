@@ -63,16 +63,13 @@
     <Compile Include="Data\ContextTests.cs" />
     <Compile Include="TestDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ORM.Configuration\ORM.Configuration.csproj">
-      <Project>{0348c8d3-70c8-46d7-a182-fedbedc47e4f}</Project>
-      <Name>ORM.Configuration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ORM\ORM.csproj">
       <Project>{564f0c89-4b2b-45ec-8037-05e7a9c1e7db}</Project>
       <Name>ORM</Name>

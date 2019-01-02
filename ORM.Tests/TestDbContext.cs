@@ -7,6 +7,7 @@ namespace ORM.Tests
         public DbTable<Errors> Errors { get; set; }
         public DbTable<Categories> Categories { get; set; }
         public DbTable<Currency> Currencies { get; set; }
+        public DbTable<TestTable> Tests { get; set; }
 
         public TestDbContext() : base("")
         {

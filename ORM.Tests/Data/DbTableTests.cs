@@ -48,5 +48,16 @@ namespace ORM.Tests.Data
                 .Filter(y => y.CategoryName != "Beverages").Read();
             Assert.AreEqual(0, category.Count);
         }
+
+        [TestMethod]
+        public void DbTableAddTest()
+        {
+            _testContext.Tests.Add(new TestTable
+            {
+                ID = 1,
+                Text = "Demo"
+            });
+            _testContext.Tests.Save();
+        }
     }
 }

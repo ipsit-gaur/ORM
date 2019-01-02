@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ORMConfiguration.cs" />
     <Compile Include="Data\IQueryBuilder.cs" />
     <Compile Include="Extensions\DataTableExtension.cs" />
     <Compile Include="Data\DataContext.cs" />
@@ -80,10 +81,6 @@
     <ProjectReference Include="..\ORM.Base\ORM.Base.csproj">
       <Project>{d83a338e-92d8-425a-bbd0-8685a2b7f577}</Project>
       <Name>ORM.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ORM.Configuration\ORM.Configuration.csproj">
-      <Project>{0348C8D3-70C8-46D7-A182-FEDBEDC47E4F}</Project>
-      <Name>ORM.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\ORM.Logger\ORM.Logger.csproj">
       <Project>{8c29f60c-e10b-4df5-9375-7048d35e0860}</Project>
