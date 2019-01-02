@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using ORM.Configuration;
 using ORM.Data;
 using ORM.Logger;
 using ORM.SQLServer;
+using System.Configuration;
 
 namespace ORM
 {
@@ -12,8 +14,8 @@ namespace ORM
         internal void Register()
         {
             var containerBuilder = new ContainerBuilder();
-
-            containerBuilder.Register(x => new SQLServerManager("ConnectionString")).As<IDataSourceManager>().SingleInstance();
+            ORMConfiguration section = (ORMConfiguration)ConfigurationManager.GetSection("orm");
+            containerBuilder.Register(x => new SQLServerManager(section)).As<IDataSourceManager>().SingleInstance();
             containerBuilder.RegisterType<SQLServerQueryBuilder>().As<IQueryBuilder>();
             containerBuilder.RegisterType<LogManager>().As<LogManager>();
             Container = containerBuilder.Build();
