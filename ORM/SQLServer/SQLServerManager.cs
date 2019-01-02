@@ -2,6 +2,7 @@
 using ORM.Extensions;
 using System.Collections.Generic;
 using System.Configuration;
+using System;
 
 namespace ORM.SQLServer
 {
@@ -14,6 +15,11 @@ namespace ORM.SQLServer
         {
             // TODO: Resolve using DI
             _sqlHelper = new SQLHelper(ConfigurationManager.AppSettings[configName]);
+        }
+
+        public int Execute(string query)
+        {
+            return _sqlHelper.ExecuteNonQuery(query);
         }
 
         List<T> IDataSourceManager.Read<T>(string query)

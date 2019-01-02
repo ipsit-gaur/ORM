@@ -17,6 +17,9 @@ namespace ORM.Data
         private readonly IQueryBuilder _queryBuilder;
 
         private List<T> _data;
+        private List<T> _dataToUpdate;
+        private List<T> _dataToAdd;
+
         private List<Expression<Func<T, bool>>> _binaryPredicates;
         #endregion
 
@@ -47,6 +50,38 @@ namespace ORM.Data
             _binaryPredicates = _binaryPredicates ?? new List<Expression<Func<T, bool>>>();
             _binaryPredicates.Add(predicate);
             return this;
+        }
+
+        public void Add(T obj)
+        {
+            _dataToAdd = _dataToAdd ?? new List<T>();
+            _dataToAdd.Add(obj);
+        }
+
+        public void Add(List<T> data)
+        {
+            _dataToAdd = _dataToAdd ?? new List<T>();
+            _dataToAdd.AddRange(data);
+        }
+
+        public void Save()
+        {
+            UpdateRecords();
+            AddNewRecords();
+        }
+
+        private void AddNewRecords()
+        {
+            if (_dataToAdd == null || _dataToAdd.Count == 0)
+                return;
+
+            var query = _queryBuilder.GetQueryForInsert(_dataToAdd);
+            _dataSourceManager.Execute(query);
+        }
+
+        private void UpdateRecords()
+        {
+
         }
 
         public int Maximum(Expression<Func<T, int>> predicate)

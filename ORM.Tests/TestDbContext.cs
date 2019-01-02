@@ -2,12 +2,13 @@
 
 namespace ORM.Tests
 {
-    public class TestContext : DataContext
+    public class TestDbContext : DataContext
     {
         public DbTable<Errors> Errors { get; set; }
         public DbTable<Categories> Categories { get; set; }
+        public DbTable<Currency> Currencies { get; set; }
 
-        public TestContext() : base("")
+        public TestDbContext() : base("")
         {
 
         }

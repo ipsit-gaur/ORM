@@ -359,5 +359,73 @@ namespace ORM.SQLServer
             var clause = GetQuery<T>(predicate, operation);
             return null;
         }
+
+        public string GetQueryForInsert<T>(List<T> data) where T : DbEntity
+        {
+            if (data == null || data.Count == 0)
+                return string.Empty;
+
+            var insertQueryBuilder = new StringBuilder();
+            foreach (var record in data)
+            {
+                insertQueryBuilder.Append(PrepareInsertQuery(record));
+            }
+            return insertQueryBuilder.ToString();
+        }
+
+        private string PrepareInsertQuery<T>(T record) where T : DbEntity
+        {
+            var sb = new StringBuilder();
+            sb.Append(SQLServerKeywords.INSERT);
+            sb.Append(SQLServerKeywords.INTO);
+            sb.Append(typeof(T).Name);
+            sb.Append(" ( ");
+            var properties = record.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            for (var index = 0; index < properties.Length; index++)
+            {
+                var property = properties[index];
+                sb.Append(property.Name);
+                if (index != properties.Length - 1)
+                    sb.Append(", ");
+            }
+            sb.Append(" ) ");
+
+            sb.Append(SQLServerKeywords.VALUES);
+
+            sb.Append(" ( ");
+            for (var index = 0; index < properties.Length; index++)
+            {
+                var property = properties[index];
+                var value = property.GetValue(record, null);
+                switch (Type.GetTypeCode(value.GetType()))
+                {
+                    case TypeCode.Boolean:
+                        sb.Append(((bool)value) ? 1 : 0);
+                        break;
+                    case TypeCode.String:
+                        sb.Append("'");
+                        sb.Append(value);
+                        sb.Append("'");
+                        break;
+
+                    case TypeCode.DateTime:
+                        sb.Append("'");
+                        sb.Append(value);
+                        sb.Append("'");
+                        break;
+
+                    case TypeCode.Object:
+                        throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", value));
+                    default:
+                        sb.Append(value);
+                        break;
+                }
+                if (index != properties.Length - 1)
+                    sb.Append(", ");
+            }
+            sb.Append(" ) ");
+
+            return sb.ToString();
+        }
     }
 }
