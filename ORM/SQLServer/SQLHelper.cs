@@ -50,10 +50,7 @@ namespace ORM.SQLServer
             {
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(query, connection);
-
-                // Open the connection in a try/catch block. 
-                // Create and execute the DataReader, writing the result
-                // set to the console window.
+                
                 SqlDataReader reader = null;
                 try
                 {
