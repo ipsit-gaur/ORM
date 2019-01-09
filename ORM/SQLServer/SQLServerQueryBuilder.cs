@@ -122,41 +122,27 @@ namespace ORM.SQLServer
             switch (b.NodeType)
             {
                 case ExpressionType.And:
-                    _queryBuilder.Append(" AND ");
-                    break;
-
                 case ExpressionType.AndAlso:
                     _queryBuilder.Append(" AND ");
                     break;
 
                 case ExpressionType.Or:
-                    _queryBuilder.Append(" OR ");
-                    break;
-
                 case ExpressionType.OrElse:
                     _queryBuilder.Append(" OR ");
                     break;
 
                 case ExpressionType.Equal:
                     if (IsNullConstant(b.Right))
-                    {
                         _queryBuilder.Append(" IS ");
-                    }
                     else
-                    {
                         _queryBuilder.Append(" = ");
-                    }
                     break;
 
                 case ExpressionType.NotEqual:
                     if (IsNullConstant(b.Right))
-                    {
                         _queryBuilder.Append(" IS NOT ");
-                    }
                     else
-                    {
                         _queryBuilder.Append(" <> ");
-                    }
                     break;
 
                 case ExpressionType.LessThan:
@@ -332,7 +318,7 @@ namespace ORM.SQLServer
             sb.Append(SQLServerKeywords.SELECT);
             sb.Append(SQLServerKeywords.ALL);
             sb.Append(SQLServerKeywords.FROM);
-            sb.Append(typeof(T).Name);
+            sb.Append(GetTableNameFromType<T>());
             sb.Append(" ");
 
             if (predicates == null)
@@ -355,9 +341,14 @@ namespace ORM.SQLServer
             return sb.ToString();
         }
 
+        private string GetTableNameFromType<T>() where T : DbEntity
+        {
+            return $"[{typeof(T).Name}]";
+        }
+
         public string PrepareQuery<T>(List<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
         {
-            var clause = GetQuery<T>(predicate, operation);
+            var clause = GetQuery(predicate, operation);
             return null;
         }
 
@@ -379,7 +370,7 @@ namespace ORM.SQLServer
             var sb = new StringBuilder();
             sb.Append(SQLServerKeywords.INSERT);
             sb.Append(SQLServerKeywords.INTO);
-            sb.Append(typeof(T).Name);
+            sb.Append(GetTableNameFromType<T>());
             sb.Append(" ( ");
             var properties = record.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             for (var index = 0; index < properties.Length; index++)
