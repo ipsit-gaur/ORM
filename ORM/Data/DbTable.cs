@@ -17,7 +17,7 @@ namespace ORM.Data
         private readonly IQueryBuilder _queryBuilder;
 
         private List<T> _data;
-        private List<T> _dataToUpdate;
+        private List<T> _dataCopy;
         private List<T> _dataToAdd;
 
         private List<Expression<Func<T, bool>>> _binaryPredicates;

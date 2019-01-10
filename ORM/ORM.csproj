@@ -68,7 +68,6 @@
     <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Data\IDataSourceManager.cs" />
     <Compile Include="Data\DbTable.cs" />
-    <Compile Include="Extensions\DbTableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLServer\SQLHelper.cs" />
     <Compile Include="SQLServer\SQLServerEvaluator.cs" />

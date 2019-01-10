@@ -1,4 +1,6 @@
-﻿namespace ORM.Data
+﻿using System;
+
+namespace ORM.Data
 {
     /// <summary>
     /// Baseclass for each Entity class representing a table schema of a DB
@@ -6,11 +8,11 @@
     public abstract class DbEntity
     {
         private DbEntityState _state = DbEntityState.Unchanged;
-        private DbEntity _value;
+        private object _value;
 
         public DbEntity()
         {
-            
+
         }
     }
 

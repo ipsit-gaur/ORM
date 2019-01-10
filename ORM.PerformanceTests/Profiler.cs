@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 
 namespace ORM.PerformanceTests
 {
@@ -19,11 +21,33 @@ namespace ORM.PerformanceTests
         {
             var time = _actionExecutor.Time(action);
 
-            File.WriteAllText(_logsPath, JsonConvert.SerializeObject(new TestResult
+            var text = string.Empty;
+            var maxBuild = 0;
+            var result = new List<TestResult>();
+            try
             {
-                Name = name,
+                text = File.ReadAllText(_logsPath);
+                result = JsonConvert.DeserializeObject<List<TestResult>>(text);
+                maxBuild = result?.FirstOrDefault(x => x.Name == name)?.Results?.Max(x => x.BuildNumber) ?? 0;
+            }
+            catch (FileNotFoundException ex)
+            {
+                File.Create(_logsPath);
+            }
+            result = result ?? new List<TestResult>();
+            var test = result.FirstOrDefault(x => x.Name == name);
+            if (test == null)
+            {
+                test = new TestResult { Name = name, Results = new List<TimeResult>() };
+                result.Add(test);
+            }
+            test.Results.Add(new TimeResult
+            {
+                BuildNumber = maxBuild + 1,
                 Ticks = time.TotalMilliseconds
-            }));
+            });
+            if (result != null)
+                File.WriteAllText(_logsPath, JsonConvert.SerializeObject(result));
         }
     }
 }

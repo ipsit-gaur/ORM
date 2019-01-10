@@ -1,0 +1,55 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <script>
+        window.onload = function () {
+
+            var dataPoints = [];
+            var data = [];
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2",
+                title: {
+                    text: "Live Data"
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: dataPoints
+                }]
+            });
+            getData();
+            renderData();
+
+            // Initial Values
+            var xValue = 0;
+            var yValue = 10;
+            var newDataCount = 6;
+
+            function renderData(data) {
+                $.each(data, function (key, value) {
+                    dataPoints.push({ x: value[0], y: parseInt(value[1]) });
+                    xValue++;
+                    yValue = parseInt(value[1]);
+                });
+
+                newDataCount = 1;
+                chart.render();
+            }
+
+            function getData() {
+                $.getJSON("../Data/Logs.json", function (json) {
+                    data = json;
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js">
+    </script>
+    <script src="~/Scripts/canvasjs.min.js">
+    </script>
+</body>
+</html>

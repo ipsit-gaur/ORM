@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.Base", "ORM.Base\ORM.Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.PerformanceTests", "ORM.PerformanceTests\ORM.PerformanceTests.csproj", "{035F5384-6FEA-4A54-BFBD-CEB8D38A5B0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ORM.Reports", "ORM.Reports\ORM.Reports.csproj", "{A683C2DB-5BE7-4A50-AB8C-7D365F925E92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{035F5384-6FEA-4A54-BFBD-CEB8D38A5B0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{035F5384-6FEA-4A54-BFBD-CEB8D38A5B0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{035F5384-6FEA-4A54-BFBD-CEB8D38A5B0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A683C2DB-5BE7-4A50-AB8C-7D365F925E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A683C2DB-5BE7-4A50-AB8C-7D365F925E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A683C2DB-5BE7-4A50-AB8C-7D365F925E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A683C2DB-5BE7-4A50-AB8C-7D365F925E92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
