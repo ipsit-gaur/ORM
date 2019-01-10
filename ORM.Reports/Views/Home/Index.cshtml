@@ -7,31 +7,43 @@
     </script>
     <script>
         $(document).ready(function () {
+
+            // Bind events
+            $('#methods').on('change', function (e) {
+                renderData(window.data.filter(x => x.Name == $(this).val())[0]);
+            });
+
             getData();
             window.dataPoints = [];
-            function renderData() {
-                var filteredData = window.data.filter(x => x.Name == 'Test')[0].Results;
+            function renderData(data) {
+                var filteredData = data.Results;
+                window.dataPoints = [];
                 $.each(filteredData, function (key, value) {
-                    window.dataPoints.push({ x: value.BuildNumber, y: parseInt(value.Ticks) });
+                    window.dataPoints.push({ x: value.BuildNumber, y: value.Ticks });
                 });
-                createChart();
+                createChart(data);
             }
 
             function getData() {
                 $.getJSON("../Data/Logs.json", function (json) {
                     window.data = json;
-                    renderData();
+                    $.each(window.data, function (key, value) {
+                        $('#methods')
+                            .append($("<option></option>")
+                            .attr("value", value.Name).text(value.Name));
+                    });
+                    renderData(window.data[0]);
                 });
             }
 
-            function createChart() {
+            function createChart(data) {
                 var ctx = document.getElementById("myChart");
                 var myLineChart = new Chart(ctx, {
                     type: 'line',
                     data: {
                         datasets: [{
                             data: window.dataPoints,
-                            label: 'Test'
+                            label: data.Name
                         }]
                     },
                     options: {
@@ -49,6 +61,8 @@
     </script>
 </head>
 <body>
+    <select id="methods" name="methods"></select>
+
     <canvas id="myChart" width="400" height="400"></canvas>
 </body>
 </html>

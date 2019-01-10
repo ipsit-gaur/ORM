@@ -1,1 +1,36 @@
-[{"Name":"Test","Results":[{"BuildNumber":1,"Ticks":4.9975000000000005}, {"BuildNumber":2,"Ticks":8.9975000000000005}, {"BuildNumber":3,"Ticks":12.9975000000000005}]}]
+[
+  {
+    "Name": "Test",
+    "Results": [
+      {
+        "BuildNumber": 1,
+        "Ticks": 4.9975000000000005
+      },
+      {
+        "BuildNumber": 2,
+        "Ticks": 8.9975000000000005
+      },
+      {
+        "BuildNumber": 3,
+        "Ticks": 12.9975000000000005
+      }
+    ]
+  },
+  {
+    "Name": "Test2",
+    "Results": [
+      {
+        "BuildNumber": 1,
+        "Ticks": 15.9975000000000005
+      },
+      {
+        "BuildNumber": 2,
+        "Ticks": 9.9975000000000005
+      },
+      {
+        "BuildNumber": 3,
+        "Ticks": 21.9975000000000005
+      }
+    ]
+  }
+]
