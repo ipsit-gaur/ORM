@@ -2,54 +2,53 @@
 <html>
 <head>
     <meta charset="UTF-8" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js">
+    </script>
     <script>
-        window.onload = function () {
-
-            var dataPoints = [];
-            var data = [];
-
-            var chart = new CanvasJS.Chart("chartContainer", {
-                theme: "light2",
-                title: {
-                    text: "Live Data"
-                },
-                data: [{
-                    type: "line",
-                    dataPoints: dataPoints
-                }]
-            });
+        $(document).ready(function () {
             getData();
-            renderData();
-
-            // Initial Values
-            var xValue = 0;
-            var yValue = 10;
-            var newDataCount = 6;
-
-            function renderData(data) {
-                $.each(data, function (key, value) {
-                    dataPoints.push({ x: value[0], y: parseInt(value[1]) });
-                    xValue++;
-                    yValue = parseInt(value[1]);
+            window.dataPoints = [];
+            function renderData() {
+                var filteredData = window.data.filter(x => x.Name == 'Test')[0].Results;
+                $.each(filteredData, function (key, value) {
+                    window.dataPoints.push({ x: value.BuildNumber, y: parseInt(value.Ticks) });
                 });
-
-                newDataCount = 1;
-                chart.render();
+                createChart();
             }
 
             function getData() {
                 $.getJSON("../Data/Logs.json", function (json) {
-                    data = json;
+                    window.data = json;
+                    renderData();
                 });
             }
-        }
+
+            function createChart() {
+                var ctx = document.getElementById("myChart");
+                var myLineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            data: window.dataPoints,
+                            label: 'Test'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        });
     </script>
 </head>
 <body>
-    <div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
-    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js">
-    </script>
-    <script src="~/Scripts/canvasjs.min.js">
-    </script>
+    <canvas id="myChart" width="400" height="400"></canvas>
 </body>
 </html>
