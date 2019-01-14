@@ -7,7 +7,7 @@ namespace ORM.Data
     /// </summary>
     public abstract class DbEntity
     {
-        public DbEntityState State = DbEntityState.Unchanged;
+        internal DbEntityState _state = DbEntityState.Unchanged;
 
         public DbEntity()
         {

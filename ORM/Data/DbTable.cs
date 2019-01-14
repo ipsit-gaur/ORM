@@ -57,7 +57,7 @@ namespace ORM.Data
                 throw new ArgumentNullException("Null object cannot be added");
 
             _data = _data ?? new List<T>();
-            obj.State = DbEntityState.Added;
+            obj._state = DbEntityState.Added;
             _data.Add(obj);
         }
 
@@ -67,7 +67,7 @@ namespace ORM.Data
                 throw new ArgumentNullException("Null objects cannot be added");
 
             _data = _data ?? new List<T>();
-            data.ForEach(x => { x.State = DbEntityState.Added; });
+            data.ForEach(x => { x._state = DbEntityState.Added; });
             _data.AddRange(data);
         }
 
@@ -76,7 +76,7 @@ namespace ORM.Data
             if (obj == null)
                 throw new ArgumentNullException("Null object cannot be updated");
 
-            obj.State = DbEntityState.Modified;
+            obj._state = DbEntityState.Modified;
         }
 
         public void Update(List<T> data)
@@ -84,7 +84,7 @@ namespace ORM.Data
             if (data == null || data.Any(x => x == null))
                 throw new ArgumentNullException("Null objects cannot be updated");
 
-            data.ForEach(x => { x.State = DbEntityState.Modified; });
+            data.ForEach(x => { x._state = DbEntityState.Modified; });
         }
 
         public void Save()
@@ -95,19 +95,19 @@ namespace ORM.Data
 
         private void AddNewRecords()
         {
-            if (_data == null || _data.Count == 0 || !_data.Any(x => x.State == DbEntityState.Added))
+            if (_data == null || _data.Count == 0 || !_data.Any(x => x._state == DbEntityState.Added))
                 return;
 
-            var query = _queryBuilder.PrepareQueryForInsert(_data.Where(x => x.State == DbEntityState.Added));
+            var query = _queryBuilder.PrepareQueryForInsert(_data.Where(x => x._state == DbEntityState.Added));
             _dataSourceManager.Execute(query);
         }
 
         private void UpdateRecords()
         {
-            if (_data == null || _data.Count == 0 || !_data.Any(x => x.State == DbEntityState.Modified))
+            if (_data == null || _data.Count == 0 || !_data.Any(x => x._state == DbEntityState.Modified))
                 return;
 
-            var query = _queryBuilder.PrepareQueryForUpdate(_data.Where(x => x.State == DbEntityState.Modified));
+            var query = _queryBuilder.PrepareQueryForUpdate(_data.Where(x => x._state == DbEntityState.Modified));
             _dataSourceManager.Execute(query);
         }
 
