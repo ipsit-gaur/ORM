@@ -19,23 +19,11 @@ namespace ORM.SQLServer
             _expressionVisitor = new SQLServerExpressionVisitor();
         }
 
-        public string Translate(Expression expression, string operation)
-        {
-            switch (operation)
-            {
-                case SQLServerKeywords.WHERE:
-                    _expressionVisitor.Visit(expression);
-                    return _expressionVisitor.WhereClause;
-                default:
-                    throw new NotSupportedException($"{operation} is not supported");
-            }
-        }
-
         private string GetQuery<T>(Expression<Func<T, bool>> predicate) where T : DbEntity
         {
             if (predicate == null)
                 throw new ArgumentException("Predicate cannot be null");
-            return Translate(predicate, SQLServerKeywords.WHERE);
+            return _expressionVisitor.Translate(predicate, SQLServerKeywords.WHERE);
         }
 
         // TODO: This should be made generic
@@ -43,7 +31,7 @@ namespace ORM.SQLServer
         {
             if (predicate == null)
                 throw new ArgumentException("Predicate cannot be null");
-            return Translate(predicate, operation);
+            return _expressionVisitor.Translate(predicate, operation);
         }
 
         public string PrepareQuery<T>(IEnumerable<Expression<Func<T, bool>>> predicates) where T : DbEntity
@@ -263,6 +251,18 @@ namespace ORM.SQLServer
             public SQLServerExpressionVisitor()
             {
                 _queryBuilder = new StringBuilder();
+            }
+
+            public string Translate(Expression expression, string operation)
+            {
+                switch (operation)
+                {
+                    case SQLServerKeywords.WHERE:
+                        Visit(expression);
+                        return WhereClause;
+                    default:
+                        throw new NotSupportedException($"{operation} is not supported");
+                }
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression m)
