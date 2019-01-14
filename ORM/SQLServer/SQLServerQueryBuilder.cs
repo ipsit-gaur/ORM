@@ -46,7 +46,7 @@ namespace ORM.SQLServer
             return Translate(predicate, operation);
         }
 
-        public string PrepareQuery<T>(List<Expression<Func<T, bool>>> predicates) where T : DbEntity
+        public string PrepareQuery<T>(IEnumerable<Expression<Func<T, bool>>> predicates) where T : DbEntity
         {
             var sb = new StringBuilder();
             sb.Append(SQLServerKeywords.SELECT);
@@ -80,15 +80,15 @@ namespace ORM.SQLServer
             return $"[{typeof(T).Name}]";
         }
 
-        public string PrepareQuery<T>(List<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
+        public string PrepareQuery<T>(IEnumerable<Expression<Func<T, bool>>> binaryPredicates, Expression<Func<T, int>> predicate, string operation) where T : DbEntity
         {
             var clause = GetQuery(predicate, operation);
             return null;
         }
 
-        public string PrepareQueryForInsert<T>(List<T> data) where T : DbEntity
+        public string PrepareQueryForInsert<T>(IEnumerable<T> data) where T : DbEntity
         {
-            if (data == null || data.Count == 0)
+            if (data == null || data.Count() == 0)
                 return string.Empty;
 
             var insertQueryBuilder = new StringBuilder();

@@ -2,6 +2,7 @@
 using ORM.SQLServer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace ORM.Data
@@ -17,8 +18,6 @@ namespace ORM.Data
         private readonly IQueryBuilder _queryBuilder;
 
         private List<T> _data;
-        private List<T> _dataCopy;
-        private List<T> _dataToAdd;
 
         private List<Expression<Func<T, bool>>> _binaryPredicates;
         #endregion
@@ -54,14 +53,16 @@ namespace ORM.Data
 
         public void Add(T obj)
         {
-            _dataToAdd = _dataToAdd ?? new List<T>();
-            _dataToAdd.Add(obj);
+            _data = _data ?? new List<T>();
+            obj.State = DbEntityState.Added;
+            _data.Add(obj);
         }
 
         public void Add(List<T> data)
         {
-            _dataToAdd = _dataToAdd ?? new List<T>();
-            _dataToAdd.AddRange(data);
+            _data = _data ?? new List<T>();
+            data.ForEach(x => { x.State = DbEntityState.Added; });
+            _data.AddRange(data);
         }
 
         public void Save()
@@ -72,10 +73,10 @@ namespace ORM.Data
 
         private void AddNewRecords()
         {
-            if (_dataToAdd == null || _dataToAdd.Count == 0)
+            if (_data == null || _data.Count == 0 || !_data.Any(x=> x.State == DbEntityState.Added))
                 return;
 
-            var query = _queryBuilder.PrepareQueryForInsert(_dataToAdd);
+            var query = _queryBuilder.PrepareQueryForInsert(_data.Where(x => x.State == DbEntityState.Added));
             _dataSourceManager.Execute(query);
         }
 
