@@ -253,6 +253,7 @@ namespace ORM.SQLServer
 
             public string Translate(Expression expression, string operation)
             {
+                _queryBuilder = new StringBuilder();
                 switch (operation)
                 {
                     case SQLServerKeywords.WHERE:
