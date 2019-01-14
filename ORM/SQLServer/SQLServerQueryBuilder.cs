@@ -144,7 +144,6 @@ namespace ORM.SQLServer
             sb.Append(SQLServerKeywords.UPDATE);
             sb.Append(GetTableNameFromType<T>());
             sb.Append(SQLServerKeywords.SET);
-            sb.Append(" ( ");
 
             PropertyInfo keyProperty = null;
 
@@ -168,7 +167,6 @@ namespace ORM.SQLServer
                 if (index != properties.Length - 1)
                     sb.Append(", ");
             }
-            sb.Append(" ) ");
 
             sb.Append(SQLServerKeywords.WHERE);
 
