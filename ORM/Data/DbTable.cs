@@ -87,8 +87,26 @@ namespace ORM.Data
             data.ForEach(x => { x._state = DbEntityState.Modified; });
         }
 
+        public void Delete(T obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("Null object cannot be deleted");
+
+            _data = _data ?? new List<T>();
+            obj._state = DbEntityState.Deleted;
+        }
+
+        public void Delete(List<T> data)
+        {
+            if (data == null || data.Any(x => x == null))
+                throw new ArgumentNullException("Null objects cannot be deleted");
+
+            data.ForEach(x => { x._state = DbEntityState.Deleted; });
+        }
+
         public void Save()
         {
+            DeleteRecords();
             UpdateRecords();
             AddNewRecords();
         }
@@ -111,10 +129,13 @@ namespace ORM.Data
             _dataSourceManager.Execute(query);
         }
 
-        public int Maximum(Expression<Func<T, int>> predicate)
+        private void DeleteRecords()
         {
-            var query = _queryBuilder.PrepareQuery(_binaryPredicates, predicate, SQLServerKeywords.MAX);
-            return 0;
+            if (_data == null || _data.Count == 0 || !_data.Any(x => x._state == DbEntityState.Deleted))
+                return;
+
+            var query = _queryBuilder.PrepareQueryForDelete(_data.Where(x => x._state == DbEntityState.Deleted));
+            _dataSourceManager.Execute(query);
         }
     }
 }

@@ -192,6 +192,36 @@ namespace ORM.SQLServer
             return sb.ToString();
         }
 
+        public string PrepareQueryForDelete<T>(IEnumerable<T> data) where T : DbEntity
+        {
+            if (data == null || data.Count() == 0)
+                return string.Empty;
+
+            var deleteQueryBuilder = new StringBuilder();
+            foreach (var record in data)
+                deleteQueryBuilder.Append(PrepareQueryForDelete(record));
+            return deleteQueryBuilder.ToString();
+        }
+
+        private string PrepareQueryForDelete<T>(T record) where T : DbEntity
+        {
+            var sb = new StringBuilder();
+            sb.Append(SQLServerKeywords.DELETE);
+            sb.Append(SQLServerKeywords.FROM);
+            sb.Append(GetTableNameFromType<T>());
+            sb.Append(SQLServerKeywords.WHERE);
+
+            var keyProperty = record.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(
+                prop => Attribute.IsDefined(prop, typeof(KeyAttribute)));
+
+            sb.Append(keyProperty.Name);
+            sb.Append(" = ");
+            var key = keyProperty.GetValue(record, null);
+            sb.Append(GetValueForSQLServer(key));
+
+            return sb.ToString();
+        }
+
         private string GetValueForSQLServer(object value)
         {
             var result = new StringBuilder();
