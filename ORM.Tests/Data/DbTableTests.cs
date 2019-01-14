@@ -59,5 +59,14 @@ namespace ORM.Tests.Data
             });
             _testContext.Tests.Save();
         }
+
+        [TestMethod]
+        public void DbTableUpdateTest()
+        {
+            var currencies = _testContext.Currencies.Read();
+            currencies.FirstOrDefault(x => x.CurrencyCD == "USD").Description = "Updated";
+            _testContext.Currencies.Update(currencies.FirstOrDefault(x => x.CurrencyCD == "USD"));
+            _testContext.Currencies.Save();
+        }
     }
 }

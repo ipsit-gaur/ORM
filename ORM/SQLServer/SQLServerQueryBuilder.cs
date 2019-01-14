@@ -130,29 +130,7 @@ namespace ORM.SQLServer
                     continue;
 
                 var value = property.GetValue(record, null);
-                switch (Type.GetTypeCode(value.GetType()))
-                {
-                    case TypeCode.Boolean:
-                        sb.Append(((bool)value) ? 1 : 0);
-                        break;
-                    case TypeCode.String:
-                        sb.Append("'");
-                        sb.Append(value);
-                        sb.Append("'");
-                        break;
-
-                    case TypeCode.DateTime:
-                        sb.Append("'");
-                        sb.Append(value);
-                        sb.Append("'");
-                        break;
-
-                    case TypeCode.Object:
-                        throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", value));
-                    default:
-                        sb.Append(value);
-                        break;
-                }
+                sb.Append(GetValueForSQLServer(value));
                 if (index != properties.Length - 1)
                     sb.Append(", ");
             }
@@ -174,7 +152,73 @@ namespace ORM.SQLServer
 
         private string PrepareQueryForUpdate<T>(T record) where T : DbEntity
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder();
+            sb.Append(SQLServerKeywords.UPDATE);
+            sb.Append(GetTableNameFromType<T>());
+            sb.Append(SQLServerKeywords.SET);
+            sb.Append(" ( ");
+
+            PropertyInfo keyProperty = null;
+
+            var properties = record.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            for (var index = 0; index < properties.Length; index++)
+            {
+                var property = properties[index];
+
+                var attribs = property.GetCustomAttributes(typeof(KeyAttribute));
+                var isKeyColumn = attribs != null && attribs.Count() > 0;
+                if (isKeyColumn)
+                    keyProperty = property;
+
+                sb.Append(property.Name);
+
+                sb.Append(" = ");
+
+                var value = property.GetValue(record, null);
+                sb.Append(GetValueForSQLServer(value));
+
+                if (index != properties.Length - 1)
+                    sb.Append(", ");
+            }
+            sb.Append(" ) ");
+
+            sb.Append(SQLServerKeywords.WHERE);
+
+            sb.Append(keyProperty.Name);
+            sb.Append(" = ");
+            var key = keyProperty.GetValue(record, null);
+            sb.Append(GetValueForSQLServer(key));
+
+            return sb.ToString();
+        }
+
+        private string GetValueForSQLServer(object value)
+        {
+            var result = new StringBuilder();
+            switch (Type.GetTypeCode(value.GetType()))
+            {
+                case TypeCode.Boolean:
+                    result.Append(((bool)value) ? 1 : 0);
+                    break;
+                case TypeCode.String:
+                    result.Append("'");
+                    result.Append(value);
+                    result.Append("'");
+                    break;
+
+                case TypeCode.DateTime:
+                    result.Append("'");
+                    result.Append(value);
+                    result.Append("'");
+                    break;
+
+                case TypeCode.Object:
+                    throw new NotSupportedException(string.Format("The constant for '{0}' is not supported", value));
+                default:
+                    result.Append(value);
+                    break;
+            }
+            return result.ToString();
         }
 
         public class SQLServerExpressionVisitor : ExpressionVisitor
