@@ -53,6 +53,9 @@ namespace ORM.Data
 
         public void Add(T obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException("Null object cannot be added");
+
             _data = _data ?? new List<T>();
             obj.State = DbEntityState.Added;
             _data.Add(obj);
@@ -60,9 +63,28 @@ namespace ORM.Data
 
         public void Add(List<T> data)
         {
+            if (data == null || data.Any(x => x == null))
+                throw new ArgumentNullException("Null objects cannot be added");
+
             _data = _data ?? new List<T>();
             data.ForEach(x => { x.State = DbEntityState.Added; });
             _data.AddRange(data);
+        }
+
+        public void Update(T obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("Null object cannot be updated");
+
+            obj.State = DbEntityState.Modified;
+        }
+
+        public void Update(List<T> data)
+        {
+            if (data == null || data.Any(x => x == null))
+                throw new ArgumentNullException("Null objects cannot be updated");
+
+            data.ForEach(x => { x.State = DbEntityState.Modified; });
         }
 
         public void Save()
@@ -73,7 +95,7 @@ namespace ORM.Data
 
         private void AddNewRecords()
         {
-            if (_data == null || _data.Count == 0 || !_data.Any(x=> x.State == DbEntityState.Added))
+            if (_data == null || _data.Count == 0 || !_data.Any(x => x.State == DbEntityState.Added))
                 return;
 
             var query = _queryBuilder.PrepareQueryForInsert(_data.Where(x => x.State == DbEntityState.Added));
@@ -82,7 +104,11 @@ namespace ORM.Data
 
         private void UpdateRecords()
         {
+            if (_data == null || _data.Count == 0 || !_data.Any(x => x.State == DbEntityState.Modified))
+                return;
 
+            var query = _queryBuilder.PrepareQueryForUpdate(_data.Where(x => x.State == DbEntityState.Modified));
+            _dataSourceManager.Execute(query);
         }
 
         public int Maximum(Expression<Func<T, int>> predicate)

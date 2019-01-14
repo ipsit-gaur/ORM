@@ -93,9 +93,7 @@ namespace ORM.SQLServer
 
             var insertQueryBuilder = new StringBuilder();
             foreach (var record in data)
-            {
                 insertQueryBuilder.Append(PrepareQueryForInsert(record));
-            }
             return insertQueryBuilder.ToString();
         }
 
@@ -161,6 +159,22 @@ namespace ORM.SQLServer
             sb.Append(" ) ");
 
             return sb.ToString();
+        }
+
+        public string PrepareQueryForUpdate<T>(IEnumerable<T> data) where T : DbEntity
+        {
+            if (data == null || data.Count() == 0)
+                return string.Empty;
+
+            var updateQueryBuilder = new StringBuilder();
+            foreach (var record in data)
+                updateQueryBuilder.Append(PrepareQueryForUpdate(record));
+            return updateQueryBuilder.ToString();
+        }
+
+        private string PrepareQueryForUpdate<T>(T record) where T : DbEntity
+        {
+            throw new NotImplementedException();
         }
 
         public class SQLServerExpressionVisitor : ExpressionVisitor
