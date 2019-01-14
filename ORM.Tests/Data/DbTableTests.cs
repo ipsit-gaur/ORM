@@ -63,10 +63,18 @@ namespace ORM.Tests.Data
         [TestMethod]
         public void DbTableUpdateTest()
         {
-            var currencies = _testContext.Currencies.Read();
-            currencies.FirstOrDefault(x => x.CurrencyCD == "USD").Description = "Updated";
-            _testContext.Currencies.Update(currencies.FirstOrDefault(x => x.CurrencyCD == "USD"));
-            _testContext.Currencies.Save();
+            var tests = _testContext.Tests.Read();
+            tests.FirstOrDefault(x => x.ID == 1).Text = "Updated";
+            _testContext.Tests.Update(tests.FirstOrDefault(x => x.ID == 1));
+            _testContext.Tests.Save();
+        }
+
+        [TestMethod]
+        public void DbTableDeleteTest()
+        {
+            var tests = _testContext.Tests.Read();
+            _testContext.Tests.Delete(tests.FirstOrDefault(x => x.ID == 1));
+            _testContext.Tests.Save();
         }
     }
 }
